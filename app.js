@@ -4,6 +4,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var lti = require('ims-lti');
+var lti_config = require('./lti.config.json');
 //app.use(bodyParser.json());
 
 var ssl_options = {
@@ -13,11 +14,8 @@ var ssl_options = {
   rejectUnauthorized: false
 };
 
-var consumer_key = "key";
-var consumer_secret = "secret";
-
 app.post('/lti/launch', bodyParser.urlencoded({ extended: false }), function(req, res){
-  var provider = new lti.Provider(consumer_key, consumer_secret);
+  var provider = new lti.Provider(lti_config.key, lti_config.secret);
   console.log(req.body);
   provider.valid_request(req, function(err, isValid) {
     //res.send("valid_request? " + isValid);
@@ -33,7 +31,8 @@ app.get('/index', bodyParser.urlencoded({ extended: false }), function(req, res)
 });
 
 app.get('/lti/config', function(req, res){
-  res.send("config");
+  res.set('Content-Type', 'application/rss+xml');
+  res.render('lti_config.ejs');
 });
 
 app.listen(3001, function(){
