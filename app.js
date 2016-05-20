@@ -14,6 +14,17 @@ var ssl_options = {
   rejectUnauthorized: false
 };
 
+var getHost = function(req){
+  var host = '';
+  if(req.secure){
+    host += "https://";
+  } else {
+    host += "http://";
+  }
+  host += req.headers.host;
+  return host;
+};
+
 app.post('/lti/launch', bodyParser.urlencoded({ extended: false }), function(req, res){
   var provider = new lti.Provider(lti_config.key, lti_config.secret);
   console.log(req.body);
@@ -32,7 +43,10 @@ app.get('/index', bodyParser.urlencoded({ extended: false }), function(req, res)
 
 app.get('/lti/config', function(req, res){
   res.set('Content-Type', 'application/rss+xml');
-  res.render('lti_config.ejs');
+  console.log(req);
+  res.render('lti_config.ejs', {
+    "host": getHost(req)
+  });
 });
 
 app.listen(3001, function(){
