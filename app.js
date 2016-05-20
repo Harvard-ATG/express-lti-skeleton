@@ -27,7 +27,7 @@ app.post('/lti/launch', bodyParser.urlencoded({ extended: false }), function(req
 });
 
 app.get('/index', bodyParser.urlencoded({ extended: false }), function(req, res){
-  res.render('index.jade');
+  res.render('index.ejs');
 });
 
 app.get('/lti/config', function(req, res){
